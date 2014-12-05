@@ -47,9 +47,6 @@ KP = K_BACKSPACE #Pause
 BG_COLOR = (255, 255, 255)
 WINDOW_SIZE = (480, 320)
 
-# Circle array
-CIRCLE_POSITION = [None, CIRCLE_LEFT_4, CIRCLE_LEFT_3, CIRCLE_LEFT_2, CIRCLE_LEFT_1, CIRCLE_MIDDLE, CIRCLE_RIGHT_1, CIRCLE_RIGHT_2, CIRCLE_RIGHT_3, CIRCLE_RIGHT_4]
-
 def getKey(key):
     if key == L1:
         return 1
@@ -70,60 +67,53 @@ def getKey(key):
     elif key == R4:
         return 9
     elif key == KP:
-        return 0
+        device.touch(XPause, YPause, adbclient.DOWN_AND_UP)
     return -1
 
 def main():
     device, serialno = viewclient.ViewClient.connectToDeviceOrExit(verbose=True)
-#pyHook event 
-    def OnKeyDown(k):
+    def KeyDown(k):
         if k == 1:
-            device.touch(XL1, Y1, adbclient.DOWN)
+            device.touch(XL1, Y1, -1, adbclient.DOWN)
         elif k == 2:
-            device.touch(XL2, Y2, adbclient.DOWN)
+            device.touch(XL2, Y2, -1, adbclient.DOWN)
         elif k == 3:
-            device.touch(XL3, Y3, adbclient.DOWN)
+            device.touch(XL3, Y3, -1, adbclient.DOWN)
         elif k == 4:
-            device.touch(XL4, Y4, adbclient.DOWN)
+            device.touch(XL4, Y4, -1, adbclient.DOWN)
         elif k == 5:
-            device.touch(XCen, YCen, adbclient.DOWN)
+            device.touch(XCen, YCen, -1, adbclient.DOWN)
         elif k == 6:
-            device.touch(XR1, Y4, adbclient.DOWN)
+            device.touch(XR1, Y4, -1, adbclient.DOWN)
         elif k == 7:
-            device.touch(XR2, Y3, adbclient.DOWN)
+            device.touch(XR2, Y3, -1, adbclient.DOWN)
         elif k == 8:
-            device.touch(XR3, Y2, adbclient.DOWN)
+            device.touch(XR3, Y2, -1, adbclient.DOWN)
         elif k == 9:
-            device.touch(XR4, Y1, adbclient.DOWN)
-        elif k == 0:
-            device.touch(XPause, YPause, adbclient.DOWN)
+            device.touch(XR4, Y1, -1, adbclient.DOWN)
 
-    def OnKeyUp(k):
+    def KeyUp(k):
         if k == 1:
-            device.touch(XL1, Y1, adbclient.UP)
+            device.touch(XL1, Y1, -1, adbclient.UP)
         elif k == 2:
-            device.touch(XL2, Y2, adbclient.UP)
+            device.touch(XL2, Y2, -1, adbclient.UP)
         elif k == 3:
-            device.touch(XL3, Y3, adbclient.UP)
+            device.touch(XL3, Y3, -1, adbclient.UP)
         elif k == 4:
-            device.touch(XL4, Y4, adbclient.UP)
+            device.touch(XL4, Y4, -1, adbclient.UP)
         elif k == 5:
-            device.touch(XCen, YCen, adbclient.UP)
+            device.touch(XCen, YCen, -1, adbclient.UP)
         elif k == 6:
-            device.touch(XR1, Y4, adbclient.UP)
+            device.touch(XR1, Y4, -1, adbclient.UP)
         elif k == 7:
-            device.touch(XR2, Y3, adbclient.UP)
+            device.touch(XR2, Y3, -1, adbclient.UP)
         elif k == 8:
-            device.touch(XR3, Y2, adbclient.UP)
+            device.touch(XR3, Y2, -1, adbclient.UP)
         elif k == 9:
-            device.touch(XR4, Y1, adbclient.UP)
-        elif k == 0:
-            device.touch(XPause, YPause, adbclient.UP)
+            device.touch(XR4, Y1, -1, adbclient.UP)
 
     #pygame init
     pygame.init()
-    pygame.font.init()
-
     pygame.display.set_mode(WINDOW_SIZE)
     pygame.display.set_caption("LL Key")
     screen = pygame.display.get_surface()
@@ -133,11 +123,6 @@ def main():
 
     while True:
         try:
-            screenUpdate = False
-            if firstFrame:
-                screenUpdate = True
-                firstFrame = False
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -145,15 +130,14 @@ def main():
                     k = getKey(event.key)
                     if k < 0:
                         sys.exit()
-                    screenUpdate = True
-                    OnKeyDown(k)
+                    KeyDown(k)
                 elif event.type == pygame.KEYUP:
                     k = getKey(event.key)
                     if k < 0:
                         sys.exit()
-                    screenUpdate = True
-                    OnKeyUp(k)
+                    KeyUp(k)
 
         except KeyboardInterrupt as e:
             break
+
 main()
