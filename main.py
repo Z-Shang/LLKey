@@ -121,6 +121,8 @@ def main():
 
     firstFrame = True
 
+    keyPressed = []
+
     while True:
         try:
             for event in pygame.event.get():
@@ -130,12 +132,23 @@ def main():
                     k = getKey(event.key)
                     if k < 0:
                         sys.exit()
+                    keyPressed.append([k, True])
                     KeyDown(k)
+                    print(repr(k) + ' Down')
                 elif event.type == pygame.KEYUP:
+                    print(keyPressed)
                     k = getKey(event.key)
                     if k < 0:
                         sys.exit()
-                    KeyUp(k)
+                    for i in range(0, len(keyPressed)):
+                        if keyPressed[i][0] == k:
+                            if not keyPressed[i][1]:
+                                print(repr(k) + ' Up')
+                                KeyUp(k)
+                            keyPressed.remove(keyPressed[i])
+                            break
+                    for i in range (0, len(keyPressed)):
+                         keyPressed[i][1] = False
 
         except KeyboardInterrupt as e:
             break
